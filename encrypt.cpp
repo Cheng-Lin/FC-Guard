@@ -1,3 +1,6 @@
+#include "security/EncryptionMethod.h"
+#include "security/RandomEncryptionMethod.h"
+
 #include <curses.h>
 #include <iostream>
 #include <string>
@@ -38,6 +41,10 @@ int main(int argc, const char* argv[])
     } while (notSame);
     endwin();
 
+    EncryptionMethod* encryptor = new RandomEncryptionMethod(password);
+    encryptor->encrypt(filename);
+
+    delete encryptor;
     return 0;
 }
 
