@@ -17,7 +17,10 @@ class RandomEncryptionMethod : public EncryptionMethod
         void encrypt(const std::string &filename) const;
 
     private:
-        const std::size_t mPasswordHash;
+        unsigned int getSeed() const;
+        
+        const bool IS_LITTLE_ENDIAN;
+        const std::size_t PASSWORD_HASH;
 };
 
 #endif
