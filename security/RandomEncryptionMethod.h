@@ -8,7 +8,6 @@ class RandomEncryptionMethod : public EncryptionMethod
 {
     public:
         RandomEncryptionMethod(const std::string &password);
-        RandomEncryptionMethod(std::string &&password);
         RandomEncryptionMethod(const RandomEncryptionMethod &) = delete;
 
         RandomEncryptionMethod &operator=(const RandomEncryptionMethod &) = delete;
@@ -18,7 +17,7 @@ class RandomEncryptionMethod : public EncryptionMethod
         void encrypt(const std::string &filename) const;
 
     private:
-        const std::string mPassword;
+        const std::size_t mPasswordHash;
 };
 
 #endif
