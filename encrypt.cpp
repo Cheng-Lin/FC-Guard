@@ -1,5 +1,5 @@
-#include "security/EncryptionMethod.h"
-#include "security/RandomEncryptionMethod.h"
+#include "security/EncryptionMethod.hpp"
+#include "security/RandomEncryptionMethod.hpp"
 
 #include <curses.h>
 #include <iostream>

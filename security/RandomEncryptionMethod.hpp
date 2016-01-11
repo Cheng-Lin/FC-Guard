@@ -1,7 +1,7 @@
 #ifndef RANDOM_ENCRYPTION_METHOD_HPP__
 #define RANDOM_ENCRYPTION_METHOD_HPP__
 
-#include "EncryptionMethod.h"
+#include "EncryptionMethod.hpp"
 #include <string>
 
 class RandomEncryptionMethod : public EncryptionMethod

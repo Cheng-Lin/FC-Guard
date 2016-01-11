@@ -1,4 +1,5 @@
-#include "RandomEncryptionMethod.h"
+#include "RandomEncryptionMethod.hpp"
+#include "util/CommonTools.hpp"
 
 #include <functional>
 #include <iostream>
@@ -20,5 +21,8 @@ void RandomEncryptionMethod::encrypt(const string &filename) const
         char* carry = (char *)&num;
         cout << carry[0] << carry[1] << carry[2] << carry[3] << 'K';
     }
+
+    cout << filename << endl;
+    cout << CommonTools::IsLittleEndian() << endl;
 }
 
