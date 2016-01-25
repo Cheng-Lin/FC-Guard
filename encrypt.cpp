@@ -1,23 +1,12 @@
 #include "security/EncryptionMethod.hpp"
 #include "security/RandomEncryptionMethod.hpp"
+#include "util/InterfaceTools.hpp"
 
 #include <curses.h>
 #include <iostream>
 #include <string>
 
 using namespace std;
-
-string getPassword(const char *prompt)
-{
-    printw(prompt);
-    noecho();
-
-    char buff[256];
-    getnstr(buff, sizeof(buff));
-
-    echo();
-    return buff;
-}
 
 int main(int argc, const char* argv[])
 {
@@ -29,17 +18,16 @@ int main(int argc, const char* argv[])
         getline(cin, filename);
     }
 
-    initscr();
     string password;
     bool notSame = false;
     do {
         if (notSame) {
             printw("\nPassword entered does not match, pelase try again.\n");
         }
-        password = getPassword("Please enter a password: ");
-        notSame = password.compare(getPassword("Please re-enter the password: ")) != 0;
+        password = InterfaceTools::GetPassword("Please enter a password: ");
+        notSame = password.compare(InterfaceTools::GetPassword("Please re-enter the password: "))
+                != 0;
     } while (notSame);
-    endwin();
 
     EncryptionMethod* encryptor = new RandomEncryptionMethod(password);
     encryptor->encrypt(filename);

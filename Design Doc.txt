@@ -6,15 +6,29 @@ Master password is used to patch missing binary bits in the password file. Once 
 be patched correctly and opening the password file will show a list of passwords and their origins.
 
 Possible Problems:
--Not yet sure what algorithm to use to do this. 
+-Not yet sure what algorithm to use to do this.
 -Passwords could potentially be sniffed out by listing all binary data without any passwords.
   -A file might look like this when printed out:
     User: John Doe
     P s w rd: ke b ar
   -From inspection we can see this is keyboard or bruteforce until keyboard is found. Must correctly encrypt information and
-   password file. 
+   password file.
 
 Implementation:
--Main.cpp
--
--
+-main.cpp
+-encrypt.cpp
+-decrypt.cpp
+
+Pseudorandom Number Encryptor
+-Design Idea:
+  -Password is hashed into a 32-bit number and acted as seed to the Pseudorandom number generator
+  -Number returned by the random number generator is xor'd with the bytes in the file
+  -Encrypted file will be in binary format
+  -Decryption will be done in the same way as encryption because xor is used
+-Progress:
+  -Basic functionality completed and tested
+  -Currently only one file can be encrypted/decrypted at a time
+-Next Step:
+  -Improve user interface
+  -Take in regex filename, so a list of files can be encrypted/decrpyted at once
+
