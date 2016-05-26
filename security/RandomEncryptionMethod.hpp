@@ -14,18 +14,28 @@ class RandomEncryptionMethod : public EncryptionMethod
 
         ~RandomEncryptionMethod() = default;
 
-        void encrypt(const std::string &filename) const;
-        void decrypt(const std::string &filename, const bool &overwrite) const;
+        void encrypt(const std::string &filename, const bool &force = false,
+                const bool &removefile = false) const;
+        void decrypt(const std::string &filename, const bool &force = false,
+                bool removefile = false) const;
+
+        static const std::string METADATA_KEY;
+        static const std::string METADATA_VALUE_ENCRYPT;
+        static const std::string METADATA_VALUE_DECRYPT;
 
     private:
-        void encryption_helper(const std::string &finName, const std::string &foutName) const;
-        unsigned int getSeed() const;
+        void encryption_helper(const std::string &finName, const std::string &foutName,
+                const bool &encrypt, const bool &removefile) const;
+        void clean_up(const std::string &finName, const std::string &foutName,
+                const std::string &meatadata, const bool &removefile) const;
+        unsigned int getSeed(const std::string uuid = "") const;
 
         static const std::string ENCRYPT_EXTENSION;
         static const std::string DECRYPT_EXTENSION;
+        static const std::size_t UUID_SIZE;
 
         const bool IS_LITTLE_ENDIAN;
-        const std::size_t PASSWORD_HASH;
+        const std::string PASSWORD;
 };
 
 #endif
