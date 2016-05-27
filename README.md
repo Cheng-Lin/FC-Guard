@@ -8,3 +8,5 @@ c++: requires at least c++11 for the code to compile (in which case please modif
 
 libncurses5-dev: cross-platform console manipulation (for password entering)
 
+libboost-all-dev: boost library that contains many widely useful API
+
