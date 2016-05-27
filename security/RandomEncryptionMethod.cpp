@@ -93,12 +93,16 @@ void RandomEncryptionMethod::encryption_helper(const string &finName, const stri
             cerr << finName << " does not contain valid encrypted data" << endl;
             return;
         }
+
         char *temp = new char[RandomEncryptionMethod::UUID_SIZE];
         fin.read(temp, RandomEncryptionMethod::UUID_SIZE);
+        temp[RandomEncryptionMethod::UUID_SIZE] = '\0';
         uuid = temp;
+
         fileSize -= RandomEncryptionMethod::UUID_SIZE;
         delete [] temp;
     }
+    cout << uuid << endl;
     default_random_engine generator(this->getSeed(uuid));
     uniform_int_distribution<unsigned int> distribution;
 

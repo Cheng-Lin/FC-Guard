@@ -15,6 +15,7 @@ const string InterfaceTools::FORCE = "force";
 const string InterfaceTools::INPUT = "input";
 const string InterfaceTools::RECURSIVE = "recursive";
 const string InterfaceTools::RE_ENCRYPT = "re-encrypt";
+const string InterfaceTools::THREADS = "threads";
 
 bool InterfaceTools::GetConfirmation(const string &prompt)
 {
@@ -51,7 +52,9 @@ po::variables_map InterfaceTools::ParseArguement(int argc, const char* argv[])
                 ((InterfaceTools::DELETE_FILE + ",d").c_str(), "Keep original file")
                 ((InterfaceTools::RECURSIVE + ",r").c_str(), "Only works with directory, "
                         "all subdirectories will be traversed")
-                (InterfaceTools::RE_ENCRYPT.c_str(), "Encrypt the encrypted file again");
+                (InterfaceTools::RE_ENCRYPT.c_str(), "Encrypt the encrypted file again")
+                ((InterfaceTools::THREADS + ",t").c_str(), po::value<int>()->default_value(1),
+                        "Number of threads to use");
 
         po::variables_map vm;
         po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
@@ -60,8 +63,12 @@ po::variables_map InterfaceTools::ParseArguement(int argc, const char* argv[])
             cout << description << endl;
             exit(0);
         }
-
         po::notify(vm);
+        if (vm[InterfaceTools::THREADS].as<int>() < 1) {
+            cerr << "Number of threads has to be greater than 0" << endl;
+            exit(1);
+        }
+
         return vm;
     }
     catch (const po::error &e)

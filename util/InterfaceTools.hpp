@@ -17,6 +17,7 @@ class InterfaceTools
         static const std::string INPUT;
         static const std::string RECURSIVE;
         static const std::string RE_ENCRYPT;
+        static const std::string THREADS;
 };
 
 #endif

@@ -2,7 +2,7 @@ CPP = g++ --std=c++14 -I .
 
 BOOST = -lboost_system -lboost_filesystem -lboost_program_options
 CURSES = -lcurses
-FS_TS = -lstdc++fs
+FS_TS = -lstdc++fs -lpthread
 
 all: encrypt decrypt
 
