@@ -10,3 +10,6 @@ libncurses5-dev: cross-platform console manipulation (for password entering)
 
 libboost-all-dev: boost library that contains many widely useful API
 
+Usage
+=====
+
