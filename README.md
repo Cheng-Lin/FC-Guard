@@ -1,5 +1,7 @@
-Password
+FC-Guard
 ========
+
+A file encryption/decryption tool
 
 Prerequisite
 ============

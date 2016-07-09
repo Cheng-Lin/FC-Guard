@@ -30,7 +30,7 @@ void processEncryption(const EncryptionMethod *encryptor, const vector<string> &
 
 int main(int argc, const char* argv[])
 {
-    po::variables_map vm = InterfaceTools::ParseArguement(argc, argv);
+    po::variables_map vm = InterfaceTools::ParseArguementsEncryptor(argc, argv);
     string filename = vm[InterfaceTools::INPUT].as<string>();
     bool force = vm.count(InterfaceTools::FORCE);
     bool deletefile = vm.count(InterfaceTools::DELETE_FILE);
