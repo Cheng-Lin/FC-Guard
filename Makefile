@@ -1,40 +1,34 @@
-CPP = g++ --std=c++14 -I .
+# Compiler
+CPP = g++
+CC_FLAGS = --std=c++14 -I .
 
+# Library
 BOOST = -lboost_system -lboost_filesystem -lboost_program_options
 CURSES = -lcurses
-LIBS = -lpthread
+LD_FLAGS = -lpthread
 
-all: encrypt decrypt
+# Folders
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
 
-encrypt: encrypt.o RandomEncryptionMethod.o security/EncryptionMethod.hpp CommonTools.o \
-		FileTools.o InterfaceTools.o
-	$(CPP) encrypt.o RandomEncryptionMethod.o CommonTools.o FileTools.o InterfaceTools.o \
-			-o encrypt $(BOOST) $(CURSES) $(LIBS)
+TARGETS = encrypt decrypt
+CPP_FILES = $(wildcard $(SRC_DIR)/**/*.cpp)
+HPP_FILES = $(wildcard $(SRC_DIR)/**/*.hpp)
+OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(CPP_FILES:$(SRC_DIR)/%.cpp=%.o))
 
-decrypt: decrypt.o RandomEncryptionMethod.o security/EncryptionMethod.hpp CommonTools.o \
-		FileTools.o InterfaceTools.o
-	$(CPP) decrypt.o RandomEncryptionMethod.o CommonTools.o FileTools.o InterfaceTools.o \
-			-o decrypt $(BOOST) $(CURSES) $(LIBS)
+all: create_dirs $(TARGETS)
 
-encrypt.o: encrypt.cpp
-	$(CPP) -c encrypt.cpp
+create_dirs:
+	@mkdir -p $(BIN_DIR)
 
-decrypt.o: decrypt.cpp
-	$(CPP) -c decrypt.cpp
+$(TARGETS): % : $(OBJ_DIR)/%.o $(OBJ_FILES)
+	$(CPP) $(CC_FLAGS) $^ -o $(BIN_DIR)/$@ $(BOOST) $(CURSES) $(LD_FLAGS)
 
-RandomEncryptionMethod.o: security/RandomEncryptionMethod.hpp security/RandomEncryptionMethod.cpp \
-		util/CommonTools.hpp util/InterfaceTools.hpp
-	$(CPP) -c security/RandomEncryptionMethod.cpp
-
-CommonTools.o: util/CommonTools.hpp util/CommonTools.cpp
-	$(CPP) -c util/CommonTools.cpp
-
-FileTools.o: util/FileTools.hpp util/FileTools.cpp
-	$(CPP) -c util/FileTools.cpp
-
-InterfaceTools.o: util/InterfaceTools.hpp util/InterfaceTools.cpp
-	$(CPP) -c util/InterfaceTools.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(dir $@)
+	cd $(SRC_DIR) && $(CPP) $(CC_FLAGS) -c -o ../$@ $(<:$(SRC_DIR)/%=%)
 
 clean:
-	rm -f *.o *~ encrypt decrypt
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
 
