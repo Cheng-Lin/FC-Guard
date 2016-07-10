@@ -3,13 +3,13 @@
 #include "util/InterfaceTools.hpp"
 
 #include <algorithm>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <cstring>
 #include <errno.h>
-#include <experimental/filesystem>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -19,6 +19,7 @@
 #include <sys/xattr.h>
 
 using namespace std;
+namespace fs = boost::filesystem;
 namespace uuids = boost::uuids;
 
 const string RandomEncryptionMethod::METADATA_KEY = "user.encrypted";
@@ -38,8 +39,12 @@ RandomEncryptionMethod::RandomEncryptionMethod(const string &password)
 void RandomEncryptionMethod::encrypt(const string &filename, const bool &force,
         const bool &removefile) const
 {
-    this->encryption_helper(filename, filename + RandomEncryptionMethod::ENCRYPT_EXTENSION, true,
-            removefile);
+    string encryptedName = filename + RandomEncryptionMethod::ENCRYPT_EXTENSION;
+    if (force || !fs::exists(encryptedName) || InterfaceTools::GetConfirmation(
+            "[WARN] Encrypted file [" + encryptedName + "] already exist. Overwrite?"))
+    {
+        this->encryption_helper(filename, encryptedName, true, removefile);
+    }
 }
 
 void RandomEncryptionMethod::decrypt(const string &filename, const bool &force,
@@ -54,23 +59,28 @@ void RandomEncryptionMethod::decrypt(const string &filename, const bool &force,
     {
         string temp = filename.substr(0, filename.length()
                 - RandomEncryptionMethod::ENCRYPT_EXTENSION.length());
-        if (force || !experimental::filesystem::exists(temp) ||
-                InterfaceTools::GetConfirmation("[WARN] Decrypt file destination [" + temp +
-                    "] already exist. Overwrite?"))
+        if (force || !fs::exists(temp) || InterfaceTools::GetConfirmation(
+                "[WARN] Decrypt file destination [" + temp + "] already exist. Overwrite?"))
         {
             foutName = temp;
         }
     }
     else
     {
-        cout << boost::format("[WARN] File [%s] does not have encrypted extension [%s].") %
-                filename % RandomEncryptionMethod::ENCRYPT_EXTENSION << endl;
+        if (!force && !InterfaceTools::GetConfirmation(boost::str(boost::format(
+                "[WARN] File [%s] does not have encrypted extension [%s], continue?") %
+                filename % RandomEncryptionMethod::ENCRYPT_EXTENSION)))
+        {
+            return;
+        }
+
         if (removefile)
         {
             foutName = filename;
             removefile = false;
         }
-        else if (force || InterfaceTools::GetConfirmation("Overwrite input file?"))
+        else if (force || InterfaceTools::GetConfirmation(boost::str(boost::format(
+                "Overwrite input file [%s]?") % filename)))
         {
             foutName = filename;
         }
@@ -102,7 +112,7 @@ void RandomEncryptionMethod::encryption_helper(const string &finName, const stri
         fileSize -= RandomEncryptionMethod::UUID_SIZE;
         delete [] temp;
     }
-    cout << uuid << endl;
+
     default_random_engine generator(this->getSeed(uuid));
     uniform_int_distribution<unsigned int> distribution;
 

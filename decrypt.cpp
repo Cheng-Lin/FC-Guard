@@ -55,7 +55,6 @@ int main(int argc, const char* argv[])
         t.join();
     }
 
-
     delete decryptor;
     return 0;
 }

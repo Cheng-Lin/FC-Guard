@@ -2,19 +2,19 @@ CPP = g++ --std=c++14 -I .
 
 BOOST = -lboost_system -lboost_filesystem -lboost_program_options
 CURSES = -lcurses
-FS_TS = -lstdc++fs -lpthread
+LIBS = -lpthread
 
 all: encrypt decrypt
 
 encrypt: encrypt.o RandomEncryptionMethod.o security/EncryptionMethod.hpp CommonTools.o \
 		FileTools.o InterfaceTools.o
 	$(CPP) encrypt.o RandomEncryptionMethod.o CommonTools.o FileTools.o InterfaceTools.o \
-			-o encrypt $(BOOST) $(CURSES) $(FS_TS)
+			-o encrypt $(BOOST) $(CURSES) $(LIBS)
 
 decrypt: decrypt.o RandomEncryptionMethod.o security/EncryptionMethod.hpp CommonTools.o \
 		FileTools.o InterfaceTools.o
 	$(CPP) decrypt.o RandomEncryptionMethod.o CommonTools.o FileTools.o InterfaceTools.o \
-			-o decrypt $(BOOST) $(CURSES) $(FS_TS)
+			-o decrypt $(BOOST) $(CURSES) $(LIBS)
 
 encrypt.o: encrypt.cpp
 	$(CPP) -c encrypt.cpp
